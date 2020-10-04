@@ -2,6 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+struct file_item {
+    int value;
+    FILE * originFile;
+};
+
 void sort(int stat, int end, int array[]);
 
 int main(int argc, char const *argv[])
@@ -47,18 +52,58 @@ int main(int argc, char const *argv[])
         rewind(tempFiles[i]);
     }
 
-    // Test for file viewing.
-    for(i = 0; i<fileCount; i++){
-        int p[1];
-        p[0] = 0;
-        while(fread(p,sizeof(int),1,tempFiles[i]) == 1){
-            printf("File %d: %d \n", i, *p);
+    // Merge files into one with k-way sorting
+
+    // Create output file
+    FILE * outFile = fopen("output.txt","w");
+
+    //Make array with top values of each file
+    struct file_item * items = malloc(sizeof(struct file_item) * fileCount);
+    for(i = 0; i < fileCount; i++){
+        fread(&inputNum,sizeof(int),1,tempFiles[i]);
+        items[i].originFile = tempFiles[i];
+        items[i].value = inputNum;
+    }
+    
+    int minIndex;
+    while(fileCount > 0){
+        // Find the smallest element [currently O(n)]
+        minIndex = 0;
+        for(i = 0; i < fileCount; i++) if (items[i].value < items[minIndex].value) minIndex = i;
+        fprintf(outFile, "%d\n", items[minIndex].value);
+        if(fread(&inputNum, sizeof(int),1,items[minIndex].originFile)){
+            items[minIndex].value = inputNum;
+        }else{
+            for(i = minIndex; i < (fileCount - 1); i++)
+                items[i] = items[i + 1];
+            fileCount--;
         }
     }
+
+    // Generate heap from files' first value
+    // struct heap_item * heap = malloc(sizeof(struct heap_item) * fileCount);
+    // for(i = 0; i< fileCount; i++){
+    //     fread(&inputNum, sizeof(int), 1, tempFiles[i]);
+    //     heap[i].value = inputNum;
+    //     heap[i].originFile = tempFiles[i];
+    // }
+
+    
+
+
+    // Test for file viewing.
+    // for(i = 0; i<fileCount; i++){
+    //     int p[1];
+    //     p[0] = 0;
+    //     while(fread(p,sizeof(int),1,tempFiles[i]) == 1){
+    //         printf("File %d: %d \n", i, *p);
+    //     }
+    // }
 
     for(i = 0; i<fileCount; i++)
         fclose(tempFiles[i]);
     fclose(inFile);
+    fclose(outFile);
     return 0;
 }
 
@@ -91,3 +136,4 @@ void sort(int start, int end, int a[]){
     sort(start, right - 1, a);
     sort(right + 1, end, a);
 }
+
