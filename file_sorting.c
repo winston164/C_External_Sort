@@ -33,7 +33,7 @@ int main(int argc, char const *argv[])
             numCount++;
         }else {
         // TODO: Sort integers in page 
-            sort(0, numCount, page);
+            sort(0, numCount - 1, page);
         // Save page in a temporary file
             tempFiles[fileCount] = tmpfile();
             fwrite(page, sizeof(page[0]), numCount, tempFiles[fileCount]);
@@ -68,11 +68,11 @@ int partition(int start, int end, int a[]){
 
 int sort(int start, int end, int a[]){
     // Validation
-    if(start == (end - 1)) return 1;
+    if(start == end) return 1;
     if(start > end) return 0;
 
     //Selecting a middle variable
-    int val, left = start, right = end - 1, temp;
+    int val, left = start, right = end, temp;
 
     val = a[start];
 
