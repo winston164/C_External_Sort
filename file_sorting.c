@@ -2,12 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct node
-{
-    int value;
-    struct node *prev;
-    struct node *next;
-};
+int sort(int stat, int end, int array[]);
 
 int main(int argc, char const *argv[])
 {
@@ -20,7 +15,8 @@ int main(int argc, char const *argv[])
     else memoryAmm = 1;
 
     // Allocate memory in gigabytes of data [2^28 * 4(size of int) = 1GB]
-    const int page_size = memoryAmm * 268435456 ;
+    const int page_size = memoryAmm * /*268435456*/ 
+    /*testing with MB */ 262144;
     int * page = malloc((sizeof (int)) * page_size );
     
     // Temporary file pointers
@@ -37,11 +33,12 @@ int main(int argc, char const *argv[])
             numCount++;
         }else {
         // TODO: Sort integers in page 
-        
+            sort(0, numCount, page);
         // Save page in a temporary file
             tempFiles[fileCount] = tmpfile();
-            fwrite(page, sizeof(page[0]), sizeof(page)/sizeof(page[0]), tempFiles[fileCount]);
+            fwrite(page, sizeof(page[0]), numCount, tempFiles[fileCount]);
             fileCount++;
+            numCount = 0;
         }
     }
 
@@ -52,15 +49,44 @@ int main(int argc, char const *argv[])
 
     // Test for file viewing.
     for(i = 0; i<fileCount; i++){
-        int * p;
-        *p = 0;
+        int p[1];
+        p[0] = 0;
         while(fread(p,sizeof(int),1,tempFiles[i]) == 1){
             printf("File %d: %d", i, *p);
         }
     }
 
     for(i = 0; i<fileCount; i++)
-        fcloes(tempFiles[i]);
+        fclose(tempFiles[i]);
     fclose(inFile);
     return 0;
+}
+
+int sort(int start, int end, int a[]){
+    // Validation
+    if(start == (end - 1)) return 1;
+    if(start > end) return 0;
+
+    //Selecting a middle variable
+    int val, left = start, right = end - 1, temp;
+
+    val = a[start];
+
+    left++;
+    while(left < right){
+        if(a[left] <= val) left++;
+        if(a[right] >= val) right--;
+        if(a[left] > val && a[right] < val){
+            temp = a[left];
+            a[left] = a[right];
+            a[right] = temp;
+        }
+    }
+
+    if(a[right] > val) right--;
+    temp = a[right];
+    a[right] = a[start];
+    a[start] = temp;
+    
+    return sort(start, right, a) && sort(right, end, a);
 }
