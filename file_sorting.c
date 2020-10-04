@@ -62,9 +62,7 @@ int main(int argc, char const *argv[])
     return 0;
 }
 
-int partition(int start, int end, int a[]){
-    int val = a[end]
-}
+
 
 int sort(int start, int end, int a[]){
     // Validation
