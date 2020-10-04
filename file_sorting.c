@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-int sort(int stat, int end, int array[]);
+void sort(int stat, int end, int array[]);
 
 int main(int argc, char const *argv[])
 {
@@ -64,17 +64,15 @@ int main(int argc, char const *argv[])
 
 
 
-int sort(int start, int end, int a[]){
+void sort(int start, int end, int a[]){
     // Validation
-    if(start == end) return 1;
-    if(start > end) return 0;
+    if(start >= end) return;
 
     //Selecting a middle variable
     int val, left = start, right = end, temp;
 
     val = a[start];
 
-    left++;
     while(left < right){
         while(a[left] <= val) left++;
         while(a[right] > val) right--;
@@ -90,5 +88,6 @@ int sort(int start, int end, int a[]){
     a[right] = a[start];
     a[start] = temp;
     
-    return sort(start, right, a) && sort(right, end, a);
+    sort(start, right - 1, a);
+    sort(right + 1, end, a);
 }
