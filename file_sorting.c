@@ -25,8 +25,9 @@ int main(int argc, char const *argv[])
     int * page = malloc((sizeof (int)) * page_size );
     
     // Temporary file pointers
-    FILE  * tempFiles[1024];
     int fileCount = 0;
+    FILE  ** tempFiles = malloc(sizeof(FILE *) * (fileCount + 1));
+    
 
     // Create temporary files based on the page size
     int inputNum = 0, numCount = 0;
@@ -40,6 +41,7 @@ int main(int argc, char const *argv[])
         // TODO: Sort integers in page 
             sort(0, numCount - 1, page);
         // Save page in a temporary file
+            realloc(tempFiles, sizeof(FILE *) * (fileCount + 1));
             tempFiles[fileCount] = tmpfile();
             fwrite(page, sizeof(page[0]), numCount, tempFiles[fileCount]);
             fileCount++;
