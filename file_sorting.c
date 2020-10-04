@@ -52,7 +52,7 @@ int main(int argc, char const *argv[])
         int p[1];
         p[0] = 0;
         while(fread(p,sizeof(int),1,tempFiles[i]) == 1){
-            printf("File %d: %d", i, *p);
+            printf("File %d: %d \n", i, *p);
         }
     }
 
@@ -60,6 +60,10 @@ int main(int argc, char const *argv[])
         fclose(tempFiles[i]);
     fclose(inFile);
     return 0;
+}
+
+int partition(int start, int end, int a[]){
+    int val = a[end]
 }
 
 int sort(int start, int end, int a[]){
@@ -74,16 +78,16 @@ int sort(int start, int end, int a[]){
 
     left++;
     while(left < right){
-        if(a[left] <= val) left++;
-        if(a[right] >= val) right--;
-        if(a[left] > val && a[right] < val){
+        while(a[left] <= val) left++;
+        while(a[right] > val) right--;
+        if(left < right){
             temp = a[left];
             a[left] = a[right];
             a[right] = temp;
         }
     }
 
-    if(a[right] > val) right--;
+    
     temp = a[right];
     a[right] = a[start];
     a[start] = temp;
