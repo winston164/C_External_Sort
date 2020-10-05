@@ -55,13 +55,12 @@ int main(int argc, char const *argv[])
         }
     }
 
-    sort(0, numCount - 1, page);
+    sort(0, numCount, page);
     // Save page in a temporary file
     tempFiles = realloc(tempFiles, sizeof(FILE *) * (fileCount + 1));
     tempFiles[fileCount] = tmpfile();
-    fwrite(page, sizeof(page[0]), numCount, tempFiles[fileCount]);
+    fwrite(page, sizeof(page[0]), numCount + 1 , tempFiles[fileCount]);
     fileCount++;
-    numCount = 0;
 
     t1 = clock() - t1;
     printf("time elapsed in making temp files: %f\n", ((double)t1)/CLOCKS_PER_SEC);
