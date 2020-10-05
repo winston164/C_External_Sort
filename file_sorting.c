@@ -45,7 +45,6 @@ int main(int argc, char const *argv[])
         }
         else
         {
-            aux+=numCount;
             sort(0, numCount, page);
             // Save page in a temporary file
             tempFiles = realloc(tempFiles, sizeof(FILE *) * (fileCount + 1));
@@ -56,7 +55,6 @@ int main(int argc, char const *argv[])
         }
     }
 
-    aux+=numCount;
     sort(0, numCount - 1, page);
     // Save page in a temporary file
     tempFiles = realloc(tempFiles, sizeof(FILE *) * (fileCount + 1));
@@ -64,8 +62,6 @@ int main(int argc, char const *argv[])
     fwrite(page, sizeof(page[0]), numCount, tempFiles[fileCount]);
     fileCount++;
     numCount = 0;
-
-    printf("Total values sorted: %d\n", aux);
 
     t1 = clock() - t1;
     printf("time elapsed in making temp files: %f\n", ((double)t1)/CLOCKS_PER_SEC);
