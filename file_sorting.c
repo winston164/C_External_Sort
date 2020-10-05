@@ -22,11 +22,11 @@ int main(int argc, char const *argv[])
     if (argc > 1 && (memoryAmm = atoi(argv[1])))
         ;
     else
-        memoryAmm = 1;
+        memoryAmm = 1024;
 
     // Allocate memory in gigabytes of data [2^28 * 4(size of int) = 1GB]
-    const int page_size = memoryAmm * 268435456
-                          /*testing with MB  262144*/;
+    const int page_size = memoryAmm * /*268435456*/
+                          /*testing with MB*/  262144;
     int *page = malloc((sizeof(int)) * page_size);
 
     // Temporary file pointers
