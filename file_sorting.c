@@ -25,8 +25,8 @@ int main(int argc, char const *argv[])
         memoryAmm = 1;
 
     // Allocate memory in gigabytes of data [2^28 * 4(size of int) = 1GB]
-    const int page_size = memoryAmm * /*268435456*/
-                          /*testing with MB */ 262144;
+    const int page_size = memoryAmm * 268435456
+                          /*testing with MB  262144*/;
     int *page = malloc((sizeof(int)) * page_size);
 
     // Temporary file pointers
@@ -36,7 +36,7 @@ int main(int argc, char const *argv[])
     // Create temporary files based on the page size
     int inputNum = 0, numCount = 0;
     t1 = clock();
-    while (fscanf(inFile, "%d", &inputNum) == 1 /*testing purpose*/ && fileCount < 3)
+    while (fscanf(inFile, "%d", &inputNum) == 1 /*testing purpose && fileCount < 3*/)
     {
         page[numCount] = inputNum;
         if (numCount + 1 < page_size)
@@ -46,11 +46,11 @@ int main(int argc, char const *argv[])
         else
         {
             aux+=numCount;
-            sort(0, numCount - 1, page);
+            sort(0, numCount, page);
             // Save page in a temporary file
             tempFiles = realloc(tempFiles, sizeof(FILE *) * (fileCount + 1));
             tempFiles[fileCount] = tmpfile();
-            fwrite(page, sizeof(page[0]), numCount, tempFiles[fileCount]);
+            fwrite(page, sizeof(page[0]), numCount + 1, tempFiles[fileCount]);
             fileCount++;
             numCount = 0;
         }
