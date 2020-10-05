@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 struct file_item
 {
@@ -14,9 +15,10 @@ int main(int argc, char const *argv[])
 {
     // Set input file
     FILE *inFile = fopen("input.txt", "r");
+    clock_t t1, t2, T = clock();
 
     // Get amount of memory in gigabytes argument, if not set default
-    int memoryAmm = 0, i;
+    int memoryAmm = 0, i, aux = 0;
     if (argc > 1 && (memoryAmm = atoi(argv[1])))
         ;
     else
@@ -33,7 +35,7 @@ int main(int argc, char const *argv[])
 
     // Create temporary files based on the page size
     int inputNum = 0, numCount = 0;
-
+    t1 = clock();
     while (fscanf(inFile, "%d", &inputNum) == 1 /*testing purpose*/ && fileCount < 3)
     {
         page[numCount] = inputNum;
@@ -43,6 +45,7 @@ int main(int argc, char const *argv[])
         }
         else
         {
+            aux+=numCount;
             sort(0, numCount - 1, page);
             // Save page in a temporary file
             tempFiles = realloc(tempFiles, sizeof(FILE *) * (fileCount + 1));
@@ -53,6 +56,7 @@ int main(int argc, char const *argv[])
         }
     }
 
+    aux+=numCount;
     sort(0, numCount - 1, page);
     // Save page in a temporary file
     tempFiles = realloc(tempFiles, sizeof(FILE *) * (fileCount + 1));
@@ -60,6 +64,11 @@ int main(int argc, char const *argv[])
     fwrite(page, sizeof(page[0]), numCount, tempFiles[fileCount]);
     fileCount++;
     numCount = 0;
+
+    printf("Total values sorted: %d\n", aux);
+
+    t1 = clock() - t1;
+    printf("time elapsed in making temp files: %f\n", ((double)t1)/CLOCKS_PER_SEC);
 
     // Set buffers to start
     for (i = 0; i < fileCount; i++)
@@ -80,6 +89,8 @@ int main(int argc, char const *argv[])
         items[i].originFile = tempFiles[i];
         items[i].value = inputNum;
     }
+
+    t2 = clock();
 
     int minIndex;
     while (fileCount > 0)
@@ -102,6 +113,9 @@ int main(int argc, char const *argv[])
         }
     }
 
+    t2= clock() - t2;
+    printf("Time elapsed after merging files: %f\n", ((double) t2)/CLOCKS_PER_SEC);
+
     // Generate heap from files' first value
     // struct heap_item * heap = malloc(sizeof(struct heap_item) * fileCount);
     // for(i = 0; i< fileCount; i++){
@@ -123,6 +137,9 @@ int main(int argc, char const *argv[])
         fclose(tempFiles[i]);
     fclose(inFile);
     fclose(outFile);
+
+    T = clock() - T;
+    printf("Elapsed time is %f\n", ((double)T)/CLOCKS_PER_SEC);
     return 0;
 }
 
