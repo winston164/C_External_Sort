@@ -55,6 +55,7 @@ int main(int argc, char const *argv[])
         }
     }
 
+    numCount--;
     sort(0, numCount, page);
     // Save page in a temporary file
     tempFiles = realloc(tempFiles, sizeof(FILE *) * (fileCount + 1));
